@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Navbar() {
+  const navigate = useNavigate();
+
   return (
     // -----NAVBAR DESKTOP----------
     <nav className="navbar">
@@ -22,7 +26,12 @@ export default function Navbar() {
             </svg>
             <span>Recherche cagnotte</span>
           </div>
-          <button className="btn-connexion btn-hover">Se connecté</button>
+          <button
+            className="btn-connexion btn-hover"
+            onClick={() => navigate("/signin")}
+          >
+            Se connecté
+          </button>
           <button className="btn-cagnotte ">Créer une cagnotte</button>
         </div>
       </div>

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const LoginForm = () => {
+const RegisterForm = () => {
+  const [username, setUsername] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -12,6 +13,12 @@ const LoginForm = () => {
 
     let isValid = true;
 
+    if (username === "") {
+      setUsernameError("Username cannot be empty");
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
     if (email === "") {
       setEmailError("Email cannot be empty");
       isValid = false;
@@ -32,10 +39,20 @@ const LoginForm = () => {
       console.log("Password:", password);
     }
   };
-  const navigate = useNavigate();
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="flex flex-col">
+        <label htmlFor="username">Username</label>
+        <input
+          type="username"
+          id="username"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          className="border rounded-md py-2 px-2"
+        />
+        {usernameError && <p className="text-red-500">{usernameError}</p>}
+      </div>
       <div className="flex flex-col">
         <label htmlFor="email">Email</label>
         <input
@@ -43,7 +60,7 @@ const LoginForm = () => {
           id="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="border-2 border-[#fe7f6d] rounded-md py-2 px-2"
+          className="border rounded-md py-2 px-2"
         />
         {emailError && <p className="text-red-500">{emailError}</p>}
       </div>
@@ -55,7 +72,7 @@ const LoginForm = () => {
           id="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="border-2 border-[#fe7f6d] rounded-md py-2 px-2"
+          className="border rounded-md py-2 px-2"
         />
         {passwordError && <p className="text-red-500">{passwordError}</p>}
       </div>
@@ -63,14 +80,7 @@ const LoginForm = () => {
       <div>
         <button
           type="submit"
-          className="bg-[#fe7f6d] text-white py-2 px-4 rounded-md w-full"
-        >
-          Connexion
-        </button>
-        <button
-          type="submit"
-          className=" text-[#fe7f6d] mt-4 py-2 px-4 rounded-md w-full border-2 border-[#fe7f6d]"
-          onClick={() => navigate("/register")}
+          className="bg-[#fe7f6d] text-white mt-4 py-2 px-4 rounded-md w-full"
         >
           Créer un compte
         </button>
@@ -79,4 +89,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
