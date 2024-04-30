@@ -6,6 +6,9 @@ function Layout() {
   return (
     <div>
       <Navbar />
+      {/* <div className="sm:hidden">
+        <HamburgerMenu />
+      </div> */}
       <Outlet />
       <Footer />
     </div>
