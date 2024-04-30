@@ -1,3 +1,5 @@
+import Avatar from "./Avatar";
+
 export default function Footer() {
-  return <div>Footer</div>;
+  return <Avatar />;
 }

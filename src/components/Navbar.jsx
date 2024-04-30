@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Avatar from "./Avatar";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -26,12 +27,13 @@ export default function Navbar() {
             </svg>
             <span>Recherche cagnotte</span>
           </div>
-          <button
+          {/* <button
             className="btn-connexion btn-hover"
             onClick={() => navigate("/signin")}
-          >
-            Se connecté
-          </button>
+          > */}
+            {/* Se connecté */}
+            <Avatar />
+          {/* </button> */}
           <button className="btn-cagnotte ">Créer une cagnotte</button>
         </div>
       </div>
