@@ -1,8 +1,42 @@
+import axios from "axios";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 import Avatar from "./Avatar";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const { userInfo, setUserInfo } = useContext(UserContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/users/profile",
+          {
+            withCredentials: true, // Include cookies for authentication
+          }
+        );
+        // setUserInfo(response.data);
+        console.log(response.data);
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const username = userInfo?.username;
+  const initext = (username) => {
+    if (!username || typeof username !== "string") {
+      return ""; // Handle invalid username input
+    }
+    return username[0].toUpperCase(); // Get and uppercase the first letter
+  };
+  const initextreturn = initext(username);
+  console.log(initextreturn);
 
   return (
     // -----NAVBAR DESKTOP----------
@@ -27,13 +61,16 @@ export default function Navbar() {
             </svg>
             <span>Recherche cagnotte</span>
           </div>
-          {/* <button
-            className="btn-connexion btn-hover"
-            onClick={() => navigate("/signin")}
-          > */}
-            {/* Se connecté */}
-            <Avatar />
-          {/* </button> */}
+          {initextreturn && <Avatar />}
+          {!initextreturn && (
+            <button
+              className="btn-connexion btn-hover"
+              onClick={() => navigate("/signin")}
+            >
+              Se connecté
+            </button>
+          )}
+
           <button className="btn-cagnotte ">Créer une cagnotte</button>
         </div>
       </div>

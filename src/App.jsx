@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
 // import Connexion from "./pages/Connexion";
-import { UserContextProvider } from "./context/UserContextComponent";
+import { UserContextProvider } from "./context/UserContext";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Signin from "./pages/Signin";

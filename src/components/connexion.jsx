@@ -1,13 +1,17 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { UserContext } from "@/context/UserContext";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { Navigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [redirect, setRedirect] = useState(false);
+  const { setUserInfo } = useContext(UserContext);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     let isValid = true;
@@ -31,8 +35,33 @@ const LoginForm = () => {
       console.log("Email:", email);
       console.log("Password:", password);
     }
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/auth/signin",
+        {
+          email,
+          password,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true, // Include credentials for cross-site requests
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response.data);
+        setUserInfo(response.data); // Access data directly from response
+        setRedirect(true);
+      } else {
+        alert("wrong credentials");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
-  const navigate = useNavigate();
+  if (redirect) {
+    return <Navigate to={"/home"} />;
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
