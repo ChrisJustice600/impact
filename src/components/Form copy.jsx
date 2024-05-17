@@ -1,97 +1,72 @@
 import axios from "axios";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
-import { Navigate } from "react-router-dom";
 import Editor from "./Editor";
-import Loader from "./Loader";
 
 const Form = () => {
   const [step, setStep] = useState(0);
   const [titre, setTitre] = useState("");
+  const [objectif, setObjectif] = useState("");
   const [categorie, setCategorie] = useState("");
   const [content, setContent] = useState("");
-  const [objectif, setObjectif] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // Initially not loading
-  const [redirect, setRedirect] = useState(false);
+  const [files, setFiles] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    setFiles(event.target.files[0]);
   };
 
-  const addComma = (value) => {
-    // Remplacer toutes les virgules existantes pour gérer les cas de mise à jour de la valeur
-    const sanitizedValue = value.replace(/,/g, "");
-
-    // Ajouter une virgule après chaque groupe de trois chiffres
-    const parts = sanitizedValue.split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    // Rejoindre les parties avec le point décimal
-    return parts.join(".");
-  };
-
-  const handleChangeInput = (event) => {
-    const inputValue = event.target.value;
-    const formattedValue = addComma(inputValue);
-    setObjectif(formattedValue);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setIsLoading(true); 
-
-    const formData = new FormData();
-    formData.append("objectif", objectif);
-    formData.append("categorie", categorie);
-    formData.append("titre", titre);
-    formData.append("content", content);
-    formData.append("file", selectedFile); 
-    console.log(formData);
-    setIsLoading(true);
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
+    setErrorMessage(""); // Clear previous error message
     try {
+      const formData = new FormData();
+      formData.append("objectif", objectif);
+      formData.append("titre", titre);
+      formData.append("categorie", categorie);
+      formData.append("content", content);
+      formData.append("files", files);
+
       const response = await axios.post(
-        "http://localhost:3001/users/create/project", 
+        "http://localhost:3001/post",
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", 
+            "Content-Type": "multipart/form-data",
           },
-          withCredentials: true, 
+          withCredentials: true,
         }
       );
       console.log("Form submitted successfully:", response.data);
-      setRedirect(true);
-
+      setStep(step + 1); // Move to the next step upon successful submission
     } catch (error) {
       console.error("Error submitting form:", error);
-      setErrorMessage(error.message); // Display error message to user
-    } finally {
-      setIsLoading(false); // Set loading state to false after fetching or error
+      setErrorMessage("Error submitting form. Please try again.");
     }
   };
 
   const nextStep = () => {
-    setStep(step + 1);
+    if (validateForm()) {
+      setStep(step + 1);
+    }
   };
 
   const prevStep = () => {
-    setStep(step - 1);
+    if (step > 0) {
+      setStep(step - 1);
+    }
   };
-  if (redirect) {
-    return <Navigate to={"/home"} />;
-  }
+
+  const validateForm = () => {
+    // Validation logic here
+    return true; // For now, return true to always allow progression
+  };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="relative w-[500px] border rounded-md border-blue-200 p-5 text-[#969696] max-h-max"
-    >
+    <form onSubmit={handleSubmit} className="relative w-[500px] border rounded-md border-blue-200 p-5 text-[#969696] max-h-max">
       {step === 0 && (
         <div>
           <h2 className="text-4xl font-bold">Étape 1</h2>
-          
           <h2 className="text-md font-bold">
             Quelle somme souhaiteriez-vous réunir ?
           </h2>
@@ -100,12 +75,12 @@ const Form = () => {
             name="objectif"
             placeholder="Votre montant à atteindre"
             value={objectif}
-            onChange={handleChangeInput}
+            onChange={(ev) => setObjectif(ev.target.value)}
             className="w-full px-8 py-2 my-8 border rounded-md focus:outline-none focus:border-blue-500"
           />
           <button
             onClick={nextStep}
-            // disabled={!objectif}
+            disabled={!objectif}
             className="border rounded-md py-2 px-3 text-white bg-[#fe7f6d] float-right"
           >
             Continuer
@@ -128,7 +103,7 @@ const Form = () => {
             </button>
             <button
               onClick={nextStep}
-              disabled={!selectedFile}
+              disabled={!files}
               className="border rounded-md py-2 px-3 text-white bg-[#fe7f6d]"
             >
               Suivant
@@ -177,25 +152,17 @@ const Form = () => {
             >
               Précédent
             </button>
-
-            {isLoading ? (
-              <button className="border border-[#fe7f6d] rounded-md py-2 px-[60px] text-[#fe7f6d] bg-[#ffffff]">
-              {" "}
-              <Loader />
+            <button
+              type="submit"
+              disabled={!titre || !categorie || !content}
+              className="border rounded-md py-2 px-3 text-white bg-[#fe7f6d]"
+            >
+              Valider le formulaire
             </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={!titre || !categorie || !content}
-                className="border rounded-md py-2 px-3 text-white bg-[#fe7f6d]"
-              >
-                Valider le formulaire
-              </button>
-            )}
           </div>
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
       )}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </form>
   );
 };

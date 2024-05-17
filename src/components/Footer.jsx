@@ -1,5 +1,4 @@
-import Avatar from "./Avatar";
-
+import { FooterPage } from "../components/component/footer";
 export default function Footer() {
-  return <Avatar />;
+  return <FooterPage />;
 }

@@ -1,5 +1,5 @@
+import { Toaster } from "@/components/ui/sonner";
 import { createContext, useState } from "react";
-
 export const UserContext = createContext(null);
 
 export function UserContextProvider({ children }) {
@@ -7,6 +7,7 @@ export function UserContextProvider({ children }) {
   return (
     <UserContext.Provider value={{ userInfo, setUserInfo }}>
       {children}
+      <Toaster />
     </UserContext.Provider>
   );
 }

@@ -1,4 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
+import Loader from "./Loader";
 
 const RegisterForm = () => {
   const [username, setUsername] = useState("");
@@ -7,9 +10,12 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [redirect, setRedirect] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Initially not loading
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true); // Show loader before fetching
 
     let isValid = true;
 
@@ -38,7 +44,31 @@ const RegisterForm = () => {
       console.log("Email:", email);
       console.log("Password:", password);
     }
+    try {
+      const response = await axios.post(
+        "https://capstone2-c1-chrisjustice600.onrender.com/auth/register",
+        {
+          username,
+          email,
+          password,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      console.log(response.data);
+      setRedirect(true);
+    } catch (error) {
+      console.error("Registration error:", error);
+      
+    } finally {
+      setIsLoading(false); // Set loading state to false after fetching or error
+    }
   };
+  if (redirect) {
+    return <Navigate to={"/signin"} />;
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -47,8 +77,8 @@ const RegisterForm = () => {
         <input
           type="username"
           id="username"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
           className="border rounded-md py-2 px-2"
         />
         {usernameError && <p className="text-red-500">{usernameError}</p>}
@@ -78,12 +108,18 @@ const RegisterForm = () => {
       </div>
 
       <div>
-        <button
-          type="submit"
-          className="bg-[#fe7f6d] text-white mt-4 py-2 px-4 rounded-md w-full"
-        >
-          Créer un compte
-        </button>
+        {isLoading ? (
+          <button className="border border-[#fe7f6d] rounded-md py-2 px-[158px] text-[#fe7f6d] bg-[#ffffff]">
+            <Loader />
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="bg-[#fe7f6d] text-white mt-4 py-2 px-4 rounded-md w-full"
+          >
+            Créer un compte
+          </button>
+        )}
       </div>
     </form>
   );

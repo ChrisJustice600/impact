@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Logo from "../assets/images/logo.png";
 import { UserContext } from "../context/UserContext";
 import Avatar from "./Avatar";
 
@@ -27,6 +28,20 @@ export default function Navbar() {
 
     fetchData();
   }, []);
+  async function logout() {
+    try {
+      await axios.post(
+        "http://localhost:3001/auth/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      setUserInfo(null);
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  }
 
   const username = userInfo?.username;
   const initext = (username) => {
@@ -42,7 +57,11 @@ export default function Navbar() {
     // -----NAVBAR DESKTOP----------
     <nav className="navbar">
       <div className="display-nav">
-        <div>Logo</div>
+        <div>
+          <Link to="/home">
+            <img className="h-12" src={Logo} alt="logo" />
+          </Link>
+        </div>
         <div className="navlink">
           <div className="search btn-hover">
             <svg
@@ -59,9 +78,11 @@ export default function Navbar() {
                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
               />
             </svg>
-            <span>Recherche cagnotte</span>
+            <span onClick={() => navigate("/research")}>
+              Recherche cagnotte
+            </span>
           </div>
-          {initextreturn && <Avatar />}
+          {initextreturn && <Avatar user={initextreturn} logout={logout} />}
           {!initextreturn && (
             <button
               className="btn-connexion btn-hover"
@@ -70,8 +91,12 @@ export default function Navbar() {
               Se connecté
             </button>
           )}
-
-          <button className="btn-cagnotte ">Créer une cagnotte</button>
+          <button
+            className="btn-cagnotte"
+            onClick={() => navigate("/Create-project")}
+          >
+            Créer une cagnotte
+          </button>
         </div>
       </div>
     </nav>

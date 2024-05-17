@@ -24,6 +24,14 @@ input:focus {
   padding: 10px 25px 10px 25px;
   margin-left: 60px;
 }
+.btn-cagnotter {
+  background: #ffffff;
+  color: #fe7f6d;
+  border-radius: 59px;
+  padding: 15px 25px 15px 25px;
+  margin-left: 60px;
+  font-weight: bold;
+}
 .btn-cagnotte:hover {
   background: #fe7e6d1a;
   transition: 0.4s ease-in-out;
