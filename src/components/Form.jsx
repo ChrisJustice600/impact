@@ -40,30 +40,29 @@ const Form = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true); 
+    setIsLoading(true);
 
     const formData = new FormData();
     formData.append("objectif", objectif);
     formData.append("categorie", categorie);
     formData.append("titre", titre);
     formData.append("content", content);
-    formData.append("file", selectedFile); 
+    formData.append("file", selectedFile);
     console.log(formData);
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:3001/users/create/project", 
+        "http://localhost:3001/users/create/project",
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", 
+            "Content-Type": "multipart/form-data",
           },
-          withCredentials: true, 
+          // withCredentials: true,
         }
       );
       console.log("Form submitted successfully:", response.data);
       setRedirect(true);
-
     } catch (error) {
       console.error("Error submitting form:", error);
       setErrorMessage(error.message); // Display error message to user
@@ -91,7 +90,7 @@ const Form = () => {
       {step === 0 && (
         <div>
           <h2 className="text-4xl font-bold">Étape 1</h2>
-          
+
           <h2 className="text-md font-bold">
             Quelle somme souhaiteriez-vous réunir ?
           </h2>
@@ -180,9 +179,9 @@ const Form = () => {
 
             {isLoading ? (
               <button className="border border-[#fe7f6d] rounded-md py-2 px-[60px] text-[#fe7f6d] bg-[#ffffff]">
-              {" "}
-              <Loader />
-            </button>
+                {" "}
+                <Loader />
+              </button>
             ) : (
               <button
                 type="submit"

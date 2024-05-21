@@ -15,7 +15,7 @@ export default function Navbar() {
         const response = await axios.get(
           "http://localhost:3001/users/profile",
           {
-            withCredentials: true, // Include cookies for authentication
+            // withCredentials: true, // Include cookies for authentication
           }
         );
         // setUserInfo(response.data);
@@ -34,7 +34,7 @@ export default function Navbar() {
         "http://localhost:3001/auth/logout",
         {},
         {
-          withCredentials: true,
+          // withCredentials: true,
         }
       );
       setUserInfo(null);

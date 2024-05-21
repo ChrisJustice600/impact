@@ -34,7 +34,7 @@ const Form = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          withCredentials: true,
+          // withCredentials: true,
         }
       );
       console.log("Form submitted successfully:", response.data);
@@ -63,7 +63,10 @@ const Form = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative w-[500px] border rounded-md border-blue-200 p-5 text-[#969696] max-h-max">
+    <form
+      onSubmit={handleSubmit}
+      className="relative w-[500px] border rounded-md border-blue-200 p-5 text-[#969696] max-h-max"
+    >
       {step === 0 && (
         <div>
           <h2 className="text-4xl font-bold">Étape 1</h2>
