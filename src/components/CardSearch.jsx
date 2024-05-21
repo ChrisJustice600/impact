@@ -41,10 +41,10 @@ const CardSearch = () => {
 
       try {
         const response = await axios.get(
-          "https://capstone2-c1-chrisjustice600.onrender.com/users/v/project",
-          {
-            withCredentials: true, // Include cookies for authentication
-          }
+          "https://capstone2-c1-chrisjustice600.onrender.com/users/v/project"
+          // {
+          //   // withCredentials: true, // Include cookies for authentication
+          // }
         );
         // setUserInfo(response.data);
         // console.log(response.data);
